@@ -11,15 +11,16 @@ echo "Preparing input method"
 
 # First, check personal input method
 if [ -e $HOME/.config/input-method/target/env ]; then
-   echo "Using personal input method"
+   echo "Using personal input method" 1>&2
    env=$HOME/.config/input-method/target/env
 # Then, check system input method
 elif [ -e /etc/input-method/target/env ]; then
-   echo "Using system input method"
+   echo "Using system input method" 1>&2
    env=/etc/input-method/target/env
 else
-   echo "Using input method for the current locale ($LANG)"
-   env=`$bin_dir/select-im`
+   echo "Using input method for the current locale ($LANG)" 1>&2
+   env=`$bin_dir/select-im`"/env"
+   echo "$env is selected" 1>&2
 fi
 
 # Set environment variables for the selected input method
@@ -33,7 +34,7 @@ if [ "$XDG_CURRENT_DESKTOP" = "GNOME" ]; then
    # workaround for bnc#853063
    # activate/deactivate g-s-d keyboard plugin depending on IM
    if [ "$IM" = "ibus" ]; then
-      echo "GNOME session is detected. GNOME will start IBus"
+      echo "GNOME session is detected. GNOME will start IBus" 1>&2
       gsettings set org.gnome.settings-daemon.plugins.keyboard active true
    else
       gsettings set org.gnome.settings-daemon.plugins.keyboard active false
@@ -52,4 +53,4 @@ unset libexec_dir
 unset bin_dir
 unset profile_dir
 
-echo "Prepared for $IM" >> $HOME/im.log
+echo "Prepared for $IM" 1>&2

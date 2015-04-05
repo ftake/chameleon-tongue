@@ -45,7 +45,7 @@ export IM
 export GTK_IM_MODULE
 export QT_IM_MODULE
 export QT_IM_SWITCHER
-export XMODIFIER
+export XMODIFIERS
 
 # Unset system environment
 unset libexec_dir

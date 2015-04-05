@@ -1,0 +1,6 @@
+IM=fcitx
+LC_CTYPE=$LANG
+XMODIFIERS="@im=fcitx"
+GTK_IM_MODULE=fcitx
+QT_IM_SWITCHER=imsw-multi
+QT_IM_MODULE=fcitx

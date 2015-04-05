@@ -1,0 +1,18 @@
+#OPT: IBUS_PANEL
+optargs=""
+
+if [ "$XDG_CURRENT_DESKTOP" = "GNOME" ]; then
+   # TODO: if the engine list is empty, add default engines for the current locale
+
+   # IBus is launched by GNOME Shell
+   exit 0;
+fi
+
+if [ "$IBUS_PANEL" != "" ]; then
+   optargs="--panel=$IBUS_PANEL"
+else
+   # TODO: detect kimpanel
+   echo "INFO: kimpanel detection has not implemented yet"
+fi
+
+ibus-daemon -d -x $optargs

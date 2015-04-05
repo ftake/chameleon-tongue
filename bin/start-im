@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Set system environment
+profile_dir=/usr/lib/input-method/profile.d
+
+if [ -n $IM ]; then
+	echo "Starting $IM"
+else
+	echo "Error: input method is not initialized"
+	exit 1
+fi
+
+# First, check personal IM start script
+if [ -e $HOME/.config/input-method/target/start ]; then
+   start=$HOME/.config/input-method/target/start
+# Then, check system IM start script
+elif [ -e /etc/input-method/target/start ]; then
+   start=/etc/input-method/target/start
+else
+   start=$profile_dir/$IM/start
+fi
+
+# Load options for start script
+if [ -e $HOME/.config/input-method/optargs ]; then
+   . $HOME/.config/input-method/optargs
+else [ -e /etc/input-method/optargs ]
+   . /etc/input-method/optargs
+fi
+
+# start IM
+. $start

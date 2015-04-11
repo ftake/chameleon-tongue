@@ -2,4 +2,4 @@ IM=ibus
 GTK_IM_MODULE=ibus
 QT_IM_MODULE=ibus
 QT_IM_SWITCHER=imsw-multi
-XMODIFIER="@im=ibus"
+XMODIFIERS="@im=ibus"

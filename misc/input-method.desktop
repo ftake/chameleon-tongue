@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Input Method
+GenericName=Start Input Method
+Comment=Start Input Method
+Exec=/usr/lib/input-method/start-im
+Terminal=false
+Type=Application
+StartupNotify=false
+NoDisplay=true

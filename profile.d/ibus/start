@@ -6,19 +6,22 @@ if [ "$XDG_CURRENT_DESKTOP" = "GNOME" ]; then
    # TODO: if the engine list is empty, add default engines for the current locale
 
    # IBus is launched by GNOME Shell
+   echo "IM: IBus will be launched by GNOME Shell. Exiting..." 1>&2
    exit 0;
 fi
 
 if [ "$IBUS_PANEL" != "" ]; then
    optargs="--panel=$IBUS_PANEL"
+   echo "IM: IBUS_PANEL is specified." 1>&2
 elif [ -e $kimpanel ]; then
    type dbus-send > /dev/null && \
    dbus-send --dest=org.freedesktop.DBus --print-reply=literal /org/freedesktop/DBus org.freedesktop.DBus.ListNames | grep org.kde.impanel > /dev/null
 
    if [ "$?" = "0" ]; then
-       echo "Use Kimpanel instead of ibus-ui-gtk3" 1>&2
+       echo "IM: Use Kimpanel instead of ibus-ui-gtk3" 1>&2
        optargs="--panel=$kimpanel"
    fi
 fi
 
+echo "IM: Additional args to ibus-daemon: \"$optargs\"" 1>&2
 ibus-daemon -d -x $optargs

@@ -1,6 +1,19 @@
 #OPT: IBUS_PANEL
 optargs=""
-kimpanel="/usr/lib64/kde4/libexec/kimpanel-ibus-panel"
+kimpanels="
+/usr/lib64/libexec/kimpanel-ibus-panel
+/usr/lib/libexec/kimpanel-ibus-panel
+/usr/lib64/kde4/libexec/kimpanel-ibus-panel
+/usr/lib/kde4/libexec/kimpanel-ibus-panel"
+
+find_kimpanel_panel() {
+   for panel in $kimpanels; do
+      if [ -e $panel ]; then
+         echo $panel
+         return
+      fi
+   done
+}
 
 if [ "$XDG_CURRENT_DESKTOP" = "GNOME" ]; then
    # TODO: if the engine list is empty, add default engines for the current locale
@@ -13,13 +26,19 @@ fi
 if [ "$IBUS_PANEL" != "" ]; then
    optargs="--panel=$IBUS_PANEL"
    echo "IM: IBUS_PANEL is specified." 1>&2
-elif [ -e $kimpanel ]; then
-   type dbus-send > /dev/null && \
-   dbus-send --dest=org.freedesktop.DBus --print-reply=literal /org/freedesktop/DBus org.freedesktop.DBus.ListNames | grep org.kde.impanel > /dev/null
+else
+   kimpanel=`find_kimpanel_panel`
+   if [ $kimpanel != "" ]; then
+      # wait until kimpanel become active
+      sleep 10
 
-   if [ "$?" = "0" ]; then
-       echo "IM: Use Kimpanel instead of ibus-ui-gtk3" 1>&2
-       optargs="--panel=$kimpanel"
+      type dbus-send > /dev/null && \
+      dbus-send --dest=org.freedesktop.DBus --print-reply=literal /org/freedesktop/DBus org.freedesktop.DBus.ListNames | grep org.kde.impanel > /dev/null
+
+      if [ "$?" = "0" ]; then
+         echo "IM: Use $kimpanel instead of ibus-ui-gtk3" 1>&2
+         optargs="--panel=$kimpanel"
+      fi
    fi
 fi
 

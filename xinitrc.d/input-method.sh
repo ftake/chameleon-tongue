@@ -17,10 +17,6 @@ if [ -e $HOME/.config/input-method/target/env ]; then
 elif [ -e /etc/input-method/target/env ]; then
    echo "Using system input method" 1>&2
    env=/etc/input-method/target/env
-else
-   echo "Using input method for the current locale ($LANG)" 1>&2
-   env=`$bin_dir/select-im`"/env"
-   echo "$env is selected" 1>&2
 fi
 
 # Set environment variables for the selected input method
@@ -47,10 +43,5 @@ export GTK_IM_MODULE
 export QT_IM_MODULE
 export QT_IM_SWITCHER
 export XMODIFIERS
-
-# Unset system environment
-unset libexec_dir
-unset bin_dir
-unset profile_dir
 
 echo "Prepared for $IM" 1>&2

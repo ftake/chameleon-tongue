@@ -23,7 +23,7 @@ fi
 # Load options for start script
 if [ -e $HOME/.config/input-method/optargs ]; then
    . $HOME/.config/input-method/optargs
-else [ -e /etc/input-method/optargs ]
+elif [ -e /etc/input-method/optargs ]; then
    . /etc/input-method/optargs
 fi
 

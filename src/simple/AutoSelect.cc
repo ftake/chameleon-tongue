@@ -1,3 +1,4 @@
+#include "AutoSelect.hh"
 #include <stdlib.h>
 #include <vector>
 #include <cstring>
@@ -5,9 +6,10 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem.hpp>
 
+namespace chameleon_tongue {
+
 static const char* default_locale = "en_US";
 static const char* locale_dir = "/usr/lib/input-method/locale.d/";
-//static const char* profile_dir = "/usr/lib/input-method/profile.d/";
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -23,7 +25,7 @@ static const char* get_lang() {
 	return default_locale;
 }
 
-void autoselect() {
+void AutoSelect::run(Environment &env, const Options::SubCommandArgs &args) {
 	vector<string> subdirs;
 	auto lang = get_lang();
 	subdirs.push_back(lang);
@@ -47,4 +49,6 @@ void autoselect() {
 			cout << ims[0].c_str() << endl;
 		}
 	}
+}
+
 }

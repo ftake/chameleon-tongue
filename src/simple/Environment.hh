@@ -1,0 +1,60 @@
+#ifndef ENVIRONMENT_H
+#define ENVIRONMENT_H
+
+#include <vector>
+#include <string>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/optional.hpp>
+#include <boost/log/trivial.hpp>
+
+namespace chameleon_tongue {
+
+class InputMethod {
+public:
+	const std::string name;
+	const std::string path;
+	InputMethod(const std::string &name, const std::string &path)
+		: name(name), path(path) {}
+	InputMethod(const InputMethod& im)
+		: name(im.name), path(im.path) {};
+};
+
+class Environment {
+private:
+	std::vector<InputMethod*> ims;
+	boost::property_tree::ptree system_config;
+	boost::property_tree::ptree user_config;
+	
+	void load_config();
+public:
+	Environment();
+
+	virtual ~Environment() {
+		for (auto im: ims) {
+			delete im;
+		}
+	}
+
+	const std::vector<InputMethod*> get_input_methods() const {
+		return ims;
+	}
+	
+	std::string get_config_val(const std::string& name) {
+		if (const auto user_val = user_config.get_optional<std::string>(name)) {
+			BOOST_LOG_TRIVIAL(info) << "get '" << name << "' from user-level config";
+			return *user_val;
+		} else if (const auto system_val = system_config.get_optional<std::string>(name)) {
+			BOOST_LOG_TRIVIAL(info) << "get '" << name << "' from system-level config";
+			return *system_val;
+		} else {
+			BOOST_LOG_TRIVIAL(info) << "undefined config: " << name;
+			return "";
+		}
+	}
+	
+
+};
+
+}
+
+#endif

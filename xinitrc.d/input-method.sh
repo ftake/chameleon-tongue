@@ -35,7 +35,9 @@ fi
 # Export variables
 export IM
 export GTK_IM_MODULE
+export GTK3_IM_MODULE
 export QT_IM_MODULE
+export QT4_IM_MODULE
 export QT_IM_SWITCHER
 export XMODIFIERS
 

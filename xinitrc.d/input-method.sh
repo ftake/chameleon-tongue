@@ -32,6 +32,21 @@ if [ "$XDG_CURRENT_DESKTOP" = "GNOME" ]; then
    fi
 fi
 
+# OOO_FORCE_DESKTOP
+ooo_force_desktop_gnome=$(im-settings config --get global.ooo_force_desktop_gnome)
+if [ "$ooo_force_desktop_gnome" = "true" ]; then
+   # Force LO to use gtk-immodule since only libreoffice-gnome supports IM module
+   # To fix cursor following problem (on_the_spot), do not use libreoffice-kde4
+   libexec_dir=/usr/lib
+   bin_dir=$libexec_dir/input-method
+
+   if $bin_dir/check-libreoffice-gnome; then
+      export OOO_FORCE_DESKTOP=gnome
+   else
+      echo "Error: libreoffice-gnome is not found." 1>&2
+   fi
+fi
+
 # Export variables
 export IM
 export GTK_IM_MODULE

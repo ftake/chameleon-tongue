@@ -1,0 +1,6 @@
+#!/bin/sh
+
+[ -e /usr/lib64/libreoffice/program/libvclplug_gtklo.so ] ||
+[ -e /usr/lib/libreoffice/program/libvclplug_gtklo.so ] ||
+[ -e /usr/lib64/libreoffice/program/libvclplug_gtk3lo.so ] ||
+[ -e /usr/lib/libreoffice/program/libvclplug_gtk3lo.so ]

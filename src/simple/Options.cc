@@ -30,7 +30,8 @@ Options::Options(int argc, char* argv[]): global_desc("Options") {
 	
 	global_desc.add_options()
 		("help", "show this help message")
-		("version", "print version");
+		("version", "print version")
+		("verbose,v", "verbose messages");
 	po::store(po::parse_command_line(subcommand_index, argv, global_desc), global_vm);
 	po::notify(global_vm);
 	
@@ -43,6 +44,12 @@ Options::Options(int argc, char* argv[]): global_desc("Options") {
 	
 	if (global_vm.count("version") > 0) {
 		subcommand = "version";
+	}
+	
+	if (global_vm.count("verbose") > 0) {
+		log_level = 1;
+	} else {
+		log_level = 0;
 	}
 }
 	

@@ -10,6 +10,9 @@
 #include "Config.hh"
 #include "Version.hh"
 #include "Options.hh"
+#include <boost/log/core.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/expressions.hpp>
 #include <boost/log/utility/setup/console.hpp>
 
 /*
@@ -78,6 +81,12 @@ int main(int argc, char* argv[]) {
 	try {
 		boost::log::add_console_log(std::clog);
 		Options opts(argc, argv);
+		
+		if (opts.get_log_level() == 0) {
+			boost::log::core::get()->set_filter(
+				boost::log::trivial::severity >= boost::log::trivial::warning
+			);
+		}
 		
 		const std::string &subcommand_name = opts.get_subcommand();
 		Environment env;

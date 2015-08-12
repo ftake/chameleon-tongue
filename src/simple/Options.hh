@@ -11,6 +11,7 @@ private:
 	boost::program_options::variables_map global_vm;
 	boost::program_options::options_description global_desc;
 	std::string subcommand; //TODO
+	int log_level;
 
 	unsigned int find_subcommand(int argc, char** argv);
 	
@@ -25,6 +26,7 @@ public:
 	const std::string& get_subcommand();
 	void print_help();
 	const Options::SubCommandArgs &get_subcommand_args();
+	int get_log_level() { return log_level; }
 };
 
 }

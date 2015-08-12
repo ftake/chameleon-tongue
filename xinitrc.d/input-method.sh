@@ -2,12 +2,7 @@
 
 # to be sourced
 
-# Set system environment
-libexec_dir=/usr/lib
-bin_dir=$libexec_dir/input-method
-profile_dir=/usr/lib/input-method/profile.d
-
-echo "Preparing input method"
+echo "Preparing input method" 1>&2
 
 # First, check personal input method
 if [ -e $HOME/.config/input-method/target/env ]; then
@@ -45,3 +40,13 @@ export QT_IM_SWITCHER
 export XMODIFIERS
 
 echo "Prepared for $IM" 1>&2
+
+if [ "$XDG_CURRENT_DESKTOP" = "" ]; then
+   libexec_dir=/usr/lib
+   bin_dir=$libexec_dir/input-method
+
+   echo "The current desktop environment is not XDG-complienet" 1>&2
+   # run start-im from this script because the current desktop may not
+   # support XDG autostart
+   $bin_dir/start-im
+fi

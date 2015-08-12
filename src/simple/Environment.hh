@@ -24,6 +24,7 @@ private:
 	std::vector<InputMethod*> ims;
 	boost::property_tree::ptree system_config;
 	boost::property_tree::ptree user_config;
+	std::string user_target_profile_path;
 	
 	void load_config();
 public:
@@ -38,6 +39,8 @@ public:
 	const std::vector<InputMethod*> get_input_methods() const {
 		return ims;
 	}
+	
+	void select_input_method(InputMethod* im);
 	
 	std::string get_config_val(const std::string &key) {
 		if (const auto user_val = user_config.get_optional<std::string>(key)) {

@@ -13,7 +13,7 @@ namespace chameleon_tongue {
 
 using namespace std;
 
-fs::path find_from_system_conf_dirs(const std::string &name) {
+fs::path find_system_conf_dirs() {
 	char* p_xdg_config_dirs = std::getenv("XDG_CONFIG_DIRS");
 	vector<string> dirs;
 	if (p_xdg_config_dirs != nullptr) {
@@ -24,17 +24,17 @@ fs::path find_from_system_conf_dirs(const std::string &name) {
 	dirs.push_back("/etc");
 	
 	for (std::string& dir: dirs) {
-		fs::path sys_config_dir_(dir + "/input-method/" + name);
+		fs::path sys_config_dir_(dir + "/input-method");
 		if (fs::exists(sys_config_dir_)) {
 			return std::move(sys_config_dir_);
 		}
 	}
 	
 	// "name" does not exist
-	return fs::path(dirs[0] + "/input-method/" + name);
+	return fs::path(dirs[0] + "/input-method");
 }
 
-fs::path find_from_user_conf_dir(const std::string &name) {
+fs::path find_user_conf_dir() {
 	char* p_xdg_config_home = std::getenv("XDG_CONFIG_HOME");
 	stringstream filename;
 	
@@ -51,9 +51,30 @@ fs::path find_from_user_conf_dir(const std::string &name) {
 		filename << p_home << "/.config";
 	}
 	
-	filename << "/input-method/" << name;
+	filename << "/input-method";
 	return fs::path(filename.str());
 }
+
+void Environment::select_input_method(InputMethod* im) {
+	const fs::path config_dir = find_user_conf_dir();
+	const fs::path target_profile = config_dir.string() + "/target";
+
+	if (fs::exists(target_profile)) {
+		// TODO error if target_profile is a real directory
+		fs::remove(target_profile);
+	}
+
+	if (im->name == "inherited") {
+		// do nothing
+	} else {
+		if (!fs::exists(config_dir)) {
+			fs::create_directories(config_dir);
+		}
+		fs::path profile(im->path);
+		fs::create_symlink(profile, target_profile);
+	}
+}
+
 
 namespace pt = boost::property_tree;
 
@@ -73,7 +94,8 @@ Environment::Environment() {
 }
 
 void Environment::load_config() {
-	const fs::path system_config_file = find_from_system_conf_dirs("im.conf");
+	const fs::path system_config_file(find_system_conf_dirs().string() + "/im.conf");
+	
 	BOOST_LOG_TRIVIAL(info) << "system-level conf file: " << system_config_file.string();
 	
 	if (fs::exists(system_config_file)) {
@@ -84,7 +106,7 @@ void Environment::load_config() {
 		BOOST_LOG_TRIVIAL(info) << "file not found: " << system_config_file;
 	}
 	
-	const fs::path user_config_file = find_from_user_conf_dir("im.conf");
+	const fs::path user_config_file(find_user_conf_dir().string() + "/im.conf");
 	
 	BOOST_LOG_TRIVIAL(info) << "user-level conf file: " << user_config_file.string();
 	if (fs::exists(user_config_file)) {
@@ -100,7 +122,7 @@ void Environment::set_config_val(const std::string &key, const std::string &valu
 	//TODO support global option
 	user_config.put(key, value);
 	// write to file
-	const fs::path config_file = find_from_user_conf_dir("im.conf");
+	const fs::path config_file(find_user_conf_dir().string() + "/im.conf");
 	BOOST_LOG_TRIVIAL(info) << "write config to: " << config_file;
 	ofstream os(config_file.string());
 	pt::ini_parser::write_ini(os, user_config);

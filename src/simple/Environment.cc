@@ -96,5 +96,29 @@ void Environment::load_config() {
 	}
 }
 
+void Environment::set_config_val(const std::string &key, const std::string &value, bool is_global) {
+	//TODO support global option
+	user_config.put(key, value);
+	// write to file
+	const fs::path config_file = find_from_user_conf_dir("im.conf");
+	BOOST_LOG_TRIVIAL(info) << "write config to: " << config_file;
+	ofstream os(config_file.string());
+	pt::ini_parser::write_ini(os, user_config);
+}
+
+static void print_tree_rec(const pt::ptree &tree, const string &path) {
+	if (tree.empty()) {
+		cout << path.substr(1) << "=" << tree.data() << endl;
+		return;
+	}
+	
+	for (auto &p: tree) {
+		print_tree_rec(p.second, path + "." + p.first);
+	}
+}
+
+void Environment::list_config() {
+	print_tree_rec(user_config, "");
+}
 
 }

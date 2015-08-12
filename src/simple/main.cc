@@ -10,11 +10,7 @@
 #include "Config.hh"
 #include "Version.hh"
 #include "Options.hh"
-
-
-
-
-
+#include <boost/log/utility/setup/console.hpp>
 
 /*
 class config {
@@ -80,7 +76,7 @@ using namespace chameleon_tongue;
 
 int main(int argc, char* argv[]) {
 	try {
-
+		boost::log::add_console_log(std::clog);
 		Options opts(argc, argv);
 		
 		const std::string &subcommand_name = opts.get_subcommand();

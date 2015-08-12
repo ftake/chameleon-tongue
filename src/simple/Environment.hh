@@ -39,20 +39,21 @@ public:
 		return ims;
 	}
 	
-	std::string get_config_val(const std::string& name) {
-		if (const auto user_val = user_config.get_optional<std::string>(name)) {
-			BOOST_LOG_TRIVIAL(info) << "get '" << name << "' from user-level config";
+	std::string get_config_val(const std::string &key) {
+		if (const auto user_val = user_config.get_optional<std::string>(key)) {
+			BOOST_LOG_TRIVIAL(info) << "get '" << key << "' from user-level config";
 			return *user_val;
-		} else if (const auto system_val = system_config.get_optional<std::string>(name)) {
-			BOOST_LOG_TRIVIAL(info) << "get '" << name << "' from system-level config";
+		} else if (const auto system_val = system_config.get_optional<std::string>(key)) {
+			BOOST_LOG_TRIVIAL(info) << "get '" << key << "' from system-level config";
 			return *system_val;
 		} else {
-			BOOST_LOG_TRIVIAL(info) << "undefined config: " << name;
+			BOOST_LOG_TRIVIAL(info) << "undefined config: " << key;
 			return "";
 		}
 	}
 	
-
+	void set_config_val(const std::string &key, const std::string &value, bool is_global);
+	void list_config();
 };
 
 }

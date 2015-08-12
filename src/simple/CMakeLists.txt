@@ -14,7 +14,7 @@ set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_C_COMPILER clang)
 add_compile_options(-std=c++11 -Wall)
 
-find_package(Boost 1.54 REQUIRED COMPONENTS log program_options filesystem system)
+find_package(Boost 1.54 REQUIRED COMPONENTS thread log program_options filesystem system)
 ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
 
 find_package(Threads REQUIRED)

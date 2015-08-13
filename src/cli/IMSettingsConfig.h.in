@@ -1,0 +1,2 @@
+#define IMSettings_VERSION_MAJOR @IMSettings_VERSION_MAJOR@
+#define IMSettings_VERSION_MINOR @IMSettings_VERSION_MINOR@

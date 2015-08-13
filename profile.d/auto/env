@@ -4,7 +4,7 @@ bin_dir=$libexec_dir/input-method
 profile_dir=/usr/lib/input-method/profile.d
 
 echo "Using input method for the current locale ($LANG)" 1>&2
-env=`$bin_dir/select-im`"/env"
+env=`im-settings autoselect`"/env"
 echo "$env is selected" 1>&2
 
 . $env

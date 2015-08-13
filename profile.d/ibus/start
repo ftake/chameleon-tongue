@@ -1,4 +1,4 @@
-#OPT: IBUS_PANEL
+ibus_panel=$(im-settings config --get ibus.panel)
 optargs=""
 kimpanels="
 /usr/lib64/libexec/kimpanel-ibus-panel
@@ -23,9 +23,9 @@ if [ "$XDG_CURRENT_DESKTOP" = "GNOME" ]; then
    exit 0;
 fi
 
-if [ "$IBUS_PANEL" != "" ]; then
-   optargs="--panel=$IBUS_PANEL"
-   echo "IM: IBUS_PANEL is specified." 1>&2
+if [ "$ibus_panel" != "" ]; then
+   optargs="--panel=$ibus_panel"
+   echo "IM: ibus panel is specified." 1>&2
 else
    kimpanel=`find_kimpanel_panel`
    if [ $kimpanel != "" ]; then

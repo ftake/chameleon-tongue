@@ -1,4 +1,5 @@
 #include "AutoSelect.hh"
+#include <iostream>
 #include <stdlib.h>
 #include <vector>
 #include <cstring>

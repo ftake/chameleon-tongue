@@ -1,4 +1,5 @@
 #include "Options.hh"
+#include <iostream>
 
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;

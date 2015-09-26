@@ -1,3 +1,5 @@
+project(IMSettings)
+
 cmake_minimum_required(VERSION 2.8)
 
 set(IMSettings_VERSION_MAJOR 0)
@@ -19,3 +21,5 @@ find_package(Threads REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 add_executable(im-settings Options.cc Environment.cc AutoSelect.cc main.cc)
 target_link_libraries(im-settings ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
+
+install(TARGETS im-settings RUNTIME DESTINATION bin)

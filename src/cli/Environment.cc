@@ -27,7 +27,7 @@ fs::path find_system_conf_dirs() {
     for (std::string& dir: dirs) {
         fs::path sys_config_dir_(dir + "/input-method");
         if (fs::exists(sys_config_dir_)) {
-            return std::move(sys_config_dir_);
+            return sys_config_dir_;
         }
     }
     

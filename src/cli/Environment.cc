@@ -56,8 +56,8 @@ fs::path find_user_conf_dir() {
     return fs::path(filename.str());
 }
 
-void Environment::select_input_method(InputMethod* im) {
-    const fs::path config_dir = find_user_conf_dir();
+void Environment::select_input_method(InputMethod* im, bool is_system) {
+    const fs::path config_dir = is_system ? find_system_conf_dirs() : find_user_conf_dir();
     const fs::path target_profile = config_dir.string() + "/target";
 
     if (fs::exists(target_profile)) {

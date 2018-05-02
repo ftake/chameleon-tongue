@@ -40,7 +40,14 @@ public:
         return ims;
     }
     
-    void select_input_method(InputMethod* im);
+    /**
+     * @brief select @im as the input method to use and write config file.
+     * 
+     * @param im         An inputmethod ID 
+     * @param is_system  true:  update system-wide settings
+     *                   false: update user-specific settings
+     */
+    void select_input_method(InputMethod* im, bool is_system);
     
     std::string get_config_val(const std::string &key) {
         if (const auto user_val = user_config.get_optional<std::string>(key)) {

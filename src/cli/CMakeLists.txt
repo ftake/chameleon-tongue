@@ -11,7 +11,7 @@ configure_file(
   )
 include_directories("${PROJECT_BINARY_DIR}")
 
-add_compile_options(-std=c++11 -Wall)
+add_compile_options(-std=c++11 -Wall -pedantic)
 
 find_package(Boost 1.54 REQUIRED COMPONENTS thread log program_options filesystem system)
 ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)

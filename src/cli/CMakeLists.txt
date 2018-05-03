@@ -19,7 +19,7 @@ ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK)
 find_package(Threads REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIR})
-add_executable(im-settings Options.cc Environment.cc AutoSelect.cc main.cc)
+add_executable(im-settings Options.cc Environment.cc AutoSelect.cc errors.cc main.cc)
 target_link_libraries(im-settings ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
 
 install(TARGETS im-settings RUNTIME DESTINATION bin)

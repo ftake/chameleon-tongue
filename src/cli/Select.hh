@@ -43,7 +43,7 @@ public:
             }
         }
         
-        throw std::logic_error(std::string(args.argv[1]) + " is not available");
+        throw std::logic_error(selected + " is not available");
     }
 
     virtual std::string get_description() const override {

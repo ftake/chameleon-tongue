@@ -8,17 +8,12 @@
 namespace chameleon_tongue {
 
 class Config: public SubCommand {
-private:
-    boost::program_options::variables_map vm;
-    boost::program_options::options_description desc;
 public:
-    void run(Environment &env, const Options::SubCommandArgs &args) override {
-        using namespace    boost::program_options;
-        boost::program_options::options_description options("Options");
-        boost::program_options::options_description hidden_options("Hidden options");
-        
+    Config() {
+        using namespace boost::program_options;
+
         options.add_options()
-            ("help",  "show this help message")
+            ("help,h",  "show this help message")
             ("get", "get the value of the specified config")
             ("set", "set the value of the specified config")
             ("list,l", "list all config variables")
@@ -26,25 +21,23 @@ public:
         hidden_options.add_options()
             ("key", value<std::string>(), "key")
             ("value", value<std::string>(), "value");
-            
-        desc.add(options).add(hidden_options);
-            
-        positional_options_description pd;
-        pd.add("key", 1);
-        pd.add("value", 1);
+                 
+        positional_options.add("key", 1);
+        positional_options.add("value", 1);
+    }
+
+    void run(Environment &env, const Options::SubCommandArgs &args) override {
+        using namespace boost::program_options;
+        boost::program_options::variables_map vm;
         
-        store(command_line_parser(args.argc, args.argv).options(desc).positional(pd).run(), vm);
-        notify(vm);
-        
+        parse_and_store_args(vm, args);
+
         bool has_get = vm.count("get") >= 1;
         bool has_set = vm.count("set") >= 1;
         auto has_system = vm.count("system") >= 1;
         
         if (vm.count("help") >= 1) {
-            std::cout << "im-settings --set key value" << std::endl;
-            std::cout << "im-settings --get key" << std::endl;
-            
-            std::cout << options;
+            print_help(std::cout);
             return;
         }
         
@@ -73,6 +66,16 @@ public:
             auto value = vm["value"].as<std::string>();
             env.set_config_val(key, value, has_system);
         }
+    }
+
+    virtual std::string get_description() const override {
+        return "set or get value of configuration specified by 'key'";
+    }
+
+    virtual void print_usage(std::ostream &out) const override {
+        out << "Usage:" << std::endl;
+        out << "  im-settings config --set key value" << std::endl;
+        out << "  im-settings config --get key" << std::endl;
     }
 };
 

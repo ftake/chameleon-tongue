@@ -13,11 +13,10 @@ public:
         return subcommands;
     }
     
-    SubCommand* find_subcommand(const std::string &name) {
+    SubCommand* find_subcommand(const std::string &name) const {
         auto itr = subcommands.find(name);
         if (itr == subcommands.end()) {
-            // unknown command
-            return subcommands["help"];
+            throw std::logic_error("'" + name + "' is not a valid sub-command");
         } else {
             return itr->second;
         }

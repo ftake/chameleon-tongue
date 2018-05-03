@@ -3,6 +3,7 @@
 
 #include <boost/program_options.hpp>
 #include <boost/filesystem/operations.hpp>
+#include <ostream>
 
 namespace chameleon_tongue {
 
@@ -24,7 +25,7 @@ public:
     Options(int argc, char* argv[]);
     
     const std::string& get_subcommand();
-    void print_help();
+    void print_help(std::ostream &out) const;
     const Options::SubCommandArgs &get_subcommand_args();
     int get_log_level() { return log_level; }
 };

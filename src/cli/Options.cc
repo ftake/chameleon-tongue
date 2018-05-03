@@ -19,7 +19,7 @@ unsigned int Options::find_subcommand(int argc, char** argv) {
 }
     
 
-Options::Options(int argc, char* argv[]): global_desc("Options") {
+Options::Options(int argc, char* argv[]): global_desc("Global options") {
     // split into global options, sub command, sub command options
     
     int subcommand_index = find_subcommand(argc, argv);
@@ -30,7 +30,7 @@ Options::Options(int argc, char* argv[]): global_desc("Options") {
     }
     
     global_desc.add_options()
-        ("help", "show this help message")
+        ("help,h", "show this help message")
         ("version", "print version")
         ("verbose,v", "verbose messages");
     po::store(po::parse_command_line(subcommand_index, argv, global_desc), global_vm);
@@ -58,8 +58,8 @@ const std::string& Options::get_subcommand() {
     return subcommand;
 }
 
-void Options::print_help() {
-    std::cout << global_desc << std::endl;
+void Options::print_help(std::ostream &out) const {
+    out << global_desc << std::endl;
 }
 
 const Options::SubCommandArgs &Options::get_subcommand_args() {

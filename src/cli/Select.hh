@@ -5,31 +5,26 @@
 namespace chameleon_tongue {
 
 class Select: public SubCommand {
-private:
-    boost::program_options::variables_map vm;
-    boost::program_options::options_description desc;
 public:
-    void run(Environment &env, const Options::SubCommandArgs &args) override {
-        using namespace    boost::program_options;
-        boost::program_options::options_description options("Options");
-        boost::program_options::options_description hidden_options("Hidden options");
-        
+    Select() {
+        using namespace boost::program_options;
+
         options.add_options()
-            ("help",  "show this help message")
+            ("help,h",  "show this help message")
             ("system", "select system-wide input method");
+        positional_options.add("input-method", 1);
         hidden_options.add_options()
             ("input-method", value<std::string>(), "input method");
+    }
 
-        desc.add(options).add(hidden_options);
-        
-        positional_options_description pd;
-        pd.add("input-method", 1);
+    void run(Environment &env, const Options::SubCommandArgs &args) override {
+        using namespace boost::program_options;
 
-        store(command_line_parser(args.argc, args.argv).options(desc).positional(pd).run(), vm);
-        notify(vm);
+        variables_map vm;      
+        parse_and_store_args(vm, args);
 
         if (vm.count("help") >= 1) {
-            std::cout << options;
+            print_help(std::cout);
             return;
         }
 
@@ -49,6 +44,15 @@ public:
         }
         
         throw std::logic_error(std::string(args.argv[1]) + " is not available");
+    }
+
+    virtual std::string get_description() const override {
+        return "select an input method to use";
+    }
+
+    virtual void print_usage(std::ostream &out) const override {
+        out << "Usage:" << std::endl;
+        out << "  im-settings select 'input method ID'" << std::endl;
     }
 };
 

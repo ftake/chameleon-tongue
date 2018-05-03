@@ -52,4 +52,7 @@ void AutoSelect::run(Environment &env, const Options::SubCommandArgs &args) {
     }
 }
 
+std::string AutoSelect::get_description() const {
+    return "select an input method according to the current locale and configuration";
+}
 }

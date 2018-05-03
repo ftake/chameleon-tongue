@@ -14,5 +14,9 @@ public:
         std::cout << IMSettings_VERSION_MINOR;
         std::cout << std::endl;
     }
+
+    virtual std::string get_description() const override {
+        return "show the version of this program";
+    }
 };
 }

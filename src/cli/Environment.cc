@@ -60,20 +60,22 @@ fs::path find_user_conf_dir() {
 void Environment::select_input_method(InputMethod* im, bool is_system) {
     const fs::path config_dir = is_system ? find_system_conf_dirs() : find_user_conf_dir();
     const fs::path target_profile = config_dir.string() + "/target";
-
-    if (fs::exists(target_profile)) {
-        // TODO error if target_profile is a real directory
-        fs::remove(target_profile);
-    }
-
-    if (im->name == "inherited") {
-        // do nothing
-    } else {
-        if (!fs::exists(config_dir)) {
-            fs::create_directories(config_dir);
+    try {
+        if (fs::exists(target_profile)) {
+            fs::remove(target_profile);
         }
-        fs::path profile(im->path);
-        fs::create_symlink(profile, target_profile);
+
+        if (im->name == "inherited") {
+            // do nothing
+        } else {
+            if (!fs::exists(config_dir)) {
+                fs::create_directories(config_dir);
+            }
+            fs::path profile(im->path);
+            fs::create_symlink(profile, target_profile);
+        }
+    } catch (boost::filesystem::filesystem_error &e) {
+        throw std::runtime_error(format_filesystem_error_msg("Failed to write a config file", e));
     }
 }
 
@@ -139,7 +141,7 @@ void Environment::set_config_val(const std::string &key, const std::string &valu
     // write to file
     BOOST_LOG_TRIVIAL(info) << "writing config to: " << config_file;
     try {
-    ofstream os(config_file.string());
+        ofstream os(config_file.string());
         os.exceptions(std::ofstream::badbit | std::ofstream::failbit);
         pt::ini_parser::write_ini(os, config);
     } catch (std::ofstream::failure &e) {

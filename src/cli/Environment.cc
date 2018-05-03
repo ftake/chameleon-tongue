@@ -1,4 +1,5 @@
 #include "Environment.hh"
+#include "errors.hh"
 
 #include <iostream>
 #include <boost/filesystem/path.hpp>
@@ -120,13 +121,31 @@ void Environment::load_config() {
 }
 
 void Environment::set_config_val(const std::string &key, const std::string &value, bool is_global) {
-    //TODO support global option
-    user_config.put(key, value);
+    fs::path config_dir = is_global ? find_system_conf_dirs() : find_user_conf_dir();
+    fs::path config_file(config_dir / "im.conf");
+
+    boost::property_tree::ptree &config = is_global ? system_config : user_config;
+    config.put(key, value);
+
+    // create config directory first
+    BOOST_LOG_TRIVIAL(info) << "creating directory if not exist: " << config_dir;
+    
+    try {
+        boost::filesystem::create_directories(config_dir);
+    } catch (boost::filesystem::filesystem_error &e) {
+        throw std::runtime_error(format_filesystem_error_msg("Failed to create a config directory", e));
+    }
+
     // write to file
-    const fs::path config_file(find_user_conf_dir().string() + "/im.conf");
-    BOOST_LOG_TRIVIAL(info) << "write config to: " << config_file;
+    BOOST_LOG_TRIVIAL(info) << "writing config to: " << config_file;
+    try {
     ofstream os(config_file.string());
-    pt::ini_parser::write_ini(os, user_config);
+        os.exceptions(std::ofstream::badbit | std::ofstream::failbit);
+        pt::ini_parser::write_ini(os, config);
+    } catch (std::ofstream::failure &e) {
+        throw std::runtime_error(format_fstream_error_msg("Failed to write a config file", config_file.string(), e));
+    }
+    BOOST_LOG_TRIVIAL(info) << "succeeded in writing config to: " << config_file;
 }
 
 static void print_tree_rec(const pt::ptree &tree, const string &path) {
